@@ -34,10 +34,11 @@ set LANG_CAPACITOR=[*] Capacitor instellen...
 set LANG_CONFIG=[!] capacitor.config.json niet gevonden. Aanmaken...
 set LANG_COMPLETE=[+] Setup voltooid!
 set LANG_NEXT=[*] Volgende stappen voor Android APK:
-set LANG_STEP1=[1.] Zorg dat je Android Studio hebt geinstalleerd
+set LANG_STEP1=[1.] Voer uit: npx cap add android
 set LANG_STEP2=[2.] Voer uit: npx cap sync
-set LANG_STEP3=[3.] Voer uit: npx cap open android
-set LANG_STEP4=[4.] Bouw APK in Android Studio
+set LANG_STEP3=[3.] Zorg dat je Android Studio hebt geinstalleerd
+set LANG_STEP4=[4.] Voer uit: npx cap open android
+set LANG_STEP5=[5.] Bouw APK in Android Studio
 set LANG_DETAILS=[*] Voor gedetailleerde instructies, zie: APK_SETUP.md
 
 goto SETUP
@@ -57,10 +58,11 @@ set LANG_CAPACITOR=[*] Setting up Capacitor...
 set LANG_CONFIG=[!] capacitor.config.json not found. Creating...
 set LANG_COMPLETE=[+] Setup complete!
 set LANG_NEXT=[*] Next steps for Android APK:
-set LANG_STEP1=[1.] Make sure you have Android Studio installed
+set LANG_STEP1=[1.] Run: npx cap add android
 set LANG_STEP2=[2.] Run: npx cap sync
-set LANG_STEP3=[3.] Run: npx cap open android
-set LANG_STEP4=[4.] Build APK in Android Studio
+set LANG_STEP3=[3.] Make sure you have Android Studio installed
+set LANG_STEP4=[4.] Run: npx cap open android
+set LANG_STEP5=[5.] Build APK in Android Studio
 set LANG_STEP1=[1.] Make sure you have Android Studio installed
 set LANG_STEP2=[2.] Run: npx cap sync
 set LANG_STEP3=[3.] Run: npx cap open android
@@ -128,6 +130,7 @@ echo   !LANG_STEP1!
 echo   !LANG_STEP2!
 echo   !LANG_STEP3!
 echo   !LANG_STEP4!
+echo   !LANG_STEP5!
 echo.
 echo !LANG_DETAILS!
 echo.

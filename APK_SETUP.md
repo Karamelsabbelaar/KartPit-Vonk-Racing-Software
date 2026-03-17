@@ -1,81 +1,103 @@
-# KartPit - APK Setup Guide
+# KartPit - APK Setupgids (Nederlands)
 
-## Overview
-This guide will help you transform KartPit into a native Android APK using Capacitor, with support for push notifications and native features.
+[Choose English] (APK_SETUP_EN.md)
 
-## Prerequisites
+---
 
-Before you start, make sure you have installed:
+## Overzicht
+
+Deze gids helpt je om KartPit om te zetten in een native Android APK met behulp van Capacitor, met ondersteuning voor push-notificaties en native functies.
+
+## Vereisten
+
+Zorg ervoor dat je het volgende hebt geïnstalleerd:
 
 1. **Node.js** (v16+)
-   - Download from: https://nodejs.org/
-   - Verify: `node -v` and `npm -v`
+   - Download van: https://nodejs.org/
+   - Verifieer met: `node -v` en `npm -v`
 
 2. **Java Development Kit (JDK)** (11+)
-   - Download from: https://www.oracle.com/java/technologies/downloads/
-   - Set JAVA_HOME environment variable
+   - Download van: https://www.oracle.com/java/technologies/downloads/
+   - Stel JAVA_HOME omgevingsvariabele in
 
-3. **Android SDK**
+3. **Android SDK & Android Studio**
    - Download Android Studio: https://developer.android.com/studio
-   - Install SDK API Level 33+
-   - Set ANDROID_SDK_ROOT environment variable
+   - Installeer SDK API Level 33+ (Android Studio doet dit automatisch)
+   - Na installatie: Stel ANDROID_HOME omgevingsvariabele in:
+     ```bash
+     # Windows (PowerShell)
+     $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
+     [Environment]::SetEnvironmentVariable('ANDROID_HOME', $env:ANDROID_HOME, [EnvironmentVariableTarget]::User)
+     ```
+     ```bash
+     # Mac/Linux
+     export ANDROID_HOME=~/Library/Android/sdk
+     echo 'export ANDROID_HOME=~/Library/Android/sdk' >> ~/.bashrc
+     ```
 
-4. **Git** (for version control)
-   - Download from: https://git-scm.com/
+4. **Git** (voor versiebeheer)
+   - Download van: https://git-scm.com/
 
-## Step 1: Install Dependencies
+## Stap 1: Installeer Dependencies
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
-This installs:
-- Capacitor CLI and Core
-- Capacitor Android platform
-- Local Notifications plugin
+Dit installeert:
+- Capacitor CLI, Core en Android (v8.2.0 of nieuwer)
+- Local Notifications plugin met volledige compatibiliteit
+- Alle andere afhankelijkheden
 
-## Step 2: Initialize Capacitor
+**Opmerking:** `--legacy-peer-deps` is nodig om versieconflicten tussen Capacitor-pakketten op te lossen.
 
-If not already done:
+## Stap 2: Initialiseer Capacitor
+
+Indien nog niet gedaan:
 
 ```bash
 npx cap init
 ```
 
-This creates the `capacitor.config.json` file with your app configuration.
+Dit creëert het `capacitor.config.json` bestand met je app-configuratie.
 
-## Step 3: Build for Web
+## Stap 3: Voeg Android Platform Toe
 
-Make sure your Flask backend is running or prepare static files:
+**BELANGRIJK: Doe dit VOOR je npx cap sync draait!**
 
 ```bash
-python app.py
+npx cap add android
 ```
 
-Or if you want to serve the HTML directly, copy your `html/` folder to a web server.
+Dit genereert het Android-project in de `android/` map met alle benodigde bestanden.
 
-## Step 4: Sync Capacitor
+## Stap 4: Bereid Webbestanden voor
+
+Je webbestanden staan al in de `html/` map en worden in de APK verpakt.
+
+## Stap 5: Synchroniseer Capacitor
 
 ```bash
 npx cap sync
 ```
 
-This syncs your web files to the Android project.
+Dit synchroniseert je webbestanden met het Android-project.
 
-## Step 5: Build APK
+## Stap 6: Bouw APK
 
-### Option A: Using Android Studio (Recommended for beginners)
+### Optie A: Debug APK (Voor testen) - AANBEVOLEN VOOR EERSTE BUILD
+
+De debug APK is automatisch ondertekend en direct installeerbaar:
 
 ```bash
-npx cap open android
+cd android
+./gradlew assembleDebug
+cd ..
 ```
 
-This opens Android Studio with your project. Then:
-1. Click **Build** → **Build Bundle(s) / APK(s)** → **Build APK(s)**
-2. Wait for the build to complete
-3. The APK will be in: `android/app/release/app-release.apk`
+De ondertekende APK staat op: `android/app/build/outputs/apk/debug/app-debug.apk`
 
-### Option B: Using Command Line
+### Optie B: Release APK (Voor productie)
 
 ```bash
 cd android
@@ -83,77 +105,122 @@ cd android
 cd ..
 ```
 
-The APK will be at: `android/app/release/app-release.apk`
+De unsigned APK staat op: `android/app/build/outputs/apk/release/app-release-unsigned.apk`
 
-## Step 6: Install APK on Device
+**Opmerking:** De release APK moet ondertekend worden voordat deze op Google Play kan worden gepubliceerd.
 
-Transfer the APK to your Android device:
+### Optie C: Android Studio gebruiken
 
 ```bash
+npx cap open android
+```
+
+Dit opent Android Studio met je project. Vervolgens:
+1. Ga naar **Build** → **Generate App Bundles or APKs**
+2. Selecteer **Build APK(s)**
+3. Kies **debug** of **release** variant
+4. Wacht tot de build compleet is
+
+## Stap 7: Installeer APK op Apparaat
+
+Zet de APK over op je Android-apparaat (gebruik de debug APK voor testen):
+
+```bash
+# Debug APK (goed ondertekend voor testen)
+adb install android/app/build/outputs/apk/debug/app-debug.apk
+
+# Of release APK (moet eerst ondertekend zijn)
 adb install android/app/release/app-release.apk
 ```
 
-Or manually transfer and install on the device.
+Or zet het handmatig over en installeer op het apparaat.
 
-## Using Notifications
+## Notificaties gebruiken
 
-### Request Permission (on app start)
+### Rechten aanvragen (bij app-start)
 
-Add this to your HTML or JavaScript:
+Voeg dit toe aan je HTML of JavaScript:
 
 ```javascript
-// Request notification permission on app load
+// Vraag notificatierechten aan bij app-laden
 if (Notifications.isNativeApp()) {
   Notifications.requestPermission();
 }
 ```
 
-### Send Pitstop Notification
+### Pitstop Notificatie sturen
 
-When a pitstop is completed:
+Wanneer een pitstop voltooid is:
 
 ```javascript
-// In timer.js or your pitstop handler
+// In timer.js of je pitstop-handler
 await Notifications.pitstopComplete(elapsedTime, "Race 1 - Stop");
 ```
 
-### Send Custom Notifications
+### Aangepaste Notificaties sturen
 
 ```javascript
-// Notify when target time is achieved
+// Meldingen wanneer doeltijd bereikt
 await Notifications.targetTimeAchieved(elapsedTime, targetTime);
 
-// Notify for personal best
-await Notifications.personalBest(elapsedTime, "Personal Best!");
+// Melding voor persoonlijk record
+await Notifications.personalBest(elapsedTime, "Persoonlijk Record!");
 
-// General race events
-await Notifications.raceEvent("Race Started", "Qualifying round");
+// Algemene racegebeurtenissen
+await Notifications.raceEvent("Race Gestart", "Kwalificatieronde");
 ```
 
-## File Structure
+## Bestandsstructuur
 
 ```
 KartPit-Vonk-Racing-Software/
-├── package.json                 # npm configuration
-├── capacitor.config.json        # Capacitor configuration
-├── android/                     # Android project (auto-generated)
+├── package.json                 # npm configuratie
+├── capacitor.config.json        # Capacitor configuratie
+├── android/                     # Android project (auto-gegenereerd)
 │   └── app/
 │       └── release/
-│           └── app-release.apk # Your final APK
-├── html/                        # Web files
+│           └── app-release.apk # Je uiteindelijke APK
+├── html/                        # Web-bestanden
 │   └── pitstop.html
 ├── js/
 │   ├── timer.js
-│   ├── notifications.js         # Notification handler
+│   ├── notifications.js         # Notificatie-afhandeling
 │   └── main.js
 ├── css/
 │   └── style.css
-└── app.py                       # Flask backend
+└── android/                     # Android build output
 ```
 
-## Troubleshooting
+## Probleemoplossing
 
-### "JAVA_HOME is not set"
+### "SDK location not found" of "ANDROID_HOME is niet ingesteld"
+
+Dit treedt op wanneer Gradle het Android SDK niet kan vinden. Zorg dat ANDROID_HOME is ingesteld:
+
+```bash
+# Windows (PowerShell)
+$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
+[Environment]::SetEnvironmentVariable('ANDROID_HOME', $env:ANDROID_HOME, [EnvironmentVariableTarget]::User)
+
+# Mac/Linux
+export ANDROID_HOME=~/Library/Android/sdk
+echo 'export ANDROID_HOME=~/Library/Android/sdk' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Verifieer met:
+```bash
+echo $env:ANDROID_HOME
+```
+
+### "Cannot read properties of undefined (reading 'extract')" - OPGELOST
+
+Dit werd veroorzaakt door versieconflicten in Capacitor-pakketten. **Oplossing:**
+
+De huidige setup gebruikt Capacitor 8.2.0+ met `npm install --legacy-peer-deps`, wat dit probleem volledig oplost. Dit is standard in de huidige repository.
+
+### "JAVA_HOME is niet ingesteld"
+
 ```bash
 # Windows
 set JAVA_HOME=C:\Program Files\Java\jdk-11
@@ -162,75 +229,72 @@ set JAVA_HOME=C:\Program Files\Java\jdk-11
 export JAVA_HOME=/usr/libexec/java_home
 ```
 
-### "Android SDK not found"
-```bash
-# Windows
-set ANDROID_SDK_ROOT=C:\Users\[Username]\AppData\Local\Android\Sdk
+### Gradle-fout: "Task not found"
 
-# Mac/Linux
-export ANDROID_SDK_ROOT=~/Library/Android/sdk
-```
+Dit duidt op een onvolledig Android-project. Zorg dat `npx cap add android` succesvol is voltooid en geen fouten getoond heeft.
 
-### APK Installation Fails
-- Check if your device has "Unknown Sources" enabled (Settings → Security)
-- Uninstall previous version first
-- Make sure APK is signed properly
+### APK-installatie mislukt
 
-### Notifications Not Working
-- Request permission first: `Notifications.requestPermission()`
-- Check Android notification settings for your app
-- Ensure you're on API 31+ for recent Android versions
+- Controleer of je apparaat "Onbekende bronnen" heeft ingeschakeld (Instellingen → Beveiliging)
+- Verwijder eerst de vorige versie
+- Zorg ervoor dat je APK correct is ondertekend
 
-## Development Workflow
+### Notificaties Werken Niet
 
-For development and testing:
+- Vraag eerst rechten aan: `Notifications.requestPermission()`
+- Controleer Android-notificatie-instellingen voor je app
+- Zorg ervoor dat je op API 31+ zit voor recente Android-versies
+
+## Workflow voor Ontwikkeling
+
+Voor ontwikkeling en testen:
 
 ```bash
-# Make changes to HTML/JS/CSS
-# Then sync to Android:
+# Maak wijzigingen aan HTML/JS/CSS
+# Synchroniseer dan met Android:
 npx cap sync
 
 # Open in Android Studio:
 npx cap open android
 
-# Build and run on device
-# Or use Android Studio's Run button
+# Bouw en voer uit op apparaat
+# Of gebruik de Run-knop van Android Studio
 ```
 
 ## Release Build
 
-For production release:
+Voor productierelease:
 
-1. Sign your APK with a keystore
-2. Obfuscate code with R8/ProGuard
-3. Test thoroughly on multiple devices
-4. Consider publishing to Google Play Store
+1. Onderteken je APK met een keystore
+2. Obfusceer code met R8/ProGuard
+3. Test grondig op meerdere apparaten
+4. Overweeg publiceren op Google Play Store
 
 ```bash
-# Generate keystore (one time)
+# Genereer keystore (eenmalig)
 keytool -genkey -v -keystore kartpit-release.keystore -keyalg RSA -keysize 2048 -validity 10000 -alias kartpit
 
-# Configure signing in android/app/build.gradle
-# Then build:
+# Configureer ondertekening in android/app/build.gradle
+# Bouw vervolgens:
 cd android
 ./gradlew bundleRelease
 ```
 
-## Additional Resources
+## Aanvullende Bronnen
 
 - **Capacitor Docs**: https://capacitorjs.com/docs
 - **Android Development**: https://developer.android.com/docs
 - **Local Notifications**: https://capacitorjs.com/docs/apis/local-notifications
 - **Google Play Store**: https://play.google.com/console
 
-## Support
+## Ondersteuning
 
-For issues or questions:
-- Check Capacitor documentation
-- Review Android logs: `adb logcat`
-- Test on actual device (not just emulator)
+Voor problemen of vragen:
+- Controleer Capacitor-documentatie
+- Bekijk Android-logboeken: `adb logcat`
+- Test op werkelijk apparaat (niet alleen emulator)
 
 ---
 
-**Last Updated**: March 2026
-**Capacitor Version**: 6.1.0+
+**Laatst Bijgewerkt**: maart 2026  
+**Capacitor Versie**: 6.1.0+
