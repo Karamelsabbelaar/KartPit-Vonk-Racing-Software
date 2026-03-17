@@ -28,11 +28,12 @@ if [ "$LANG" == "1" ]; then
     LANG_CONFIG="[!] capacitor.config.json niet gevonden. Aanmaken..."
     LANG_COMPLETE="[+] Setup voltooid!"
     LANG_NEXT="[*] Volgende stappen voor Android APK:"
-    LANG_STEP1="[1.] Voer uit: npx cap add android"
-    LANG_STEP2="[2.] Voer uit: npx cap sync"
-    LANG_STEP3="[3.] Zorg dat je Android Studio hebt geinstalleerd"
-    LANG_STEP4="[4.] Voer uit: npx cap open android"
-    LANG_STEP5="[5.] Bouw APK in Android Studio"
+    LANG_STEP1="[1.] Zorg dat je Android Studio hebt geinstalleerd"
+    LANG_STEP2="[2.] Stel ANDROID_HOME in: export ANDROID_HOME=~/Library/Android/sdk"
+    LANG_STEP3="[3.] Voer uit: npx cap add android"
+    LANG_STEP4="[4.] Voer uit: npx cap sync"
+    LANG_STEP5="[5.] Bouw APK: cd android && ./gradlew assembleDebug"
+    LANG_STEP6="[6.] APK staat in: android/app/build/outputs/apk/debug/app-debug.apk"
     LANG_DETAILS="[*] Voor gedetailleerde instructies, zie: APK_SETUP.md"
 elif [ "$LANG" == "2" ]; then
     # English
@@ -49,11 +50,12 @@ elif [ "$LANG" == "2" ]; then
     LANG_CONFIG="[!] capacitor.config.json not found. Creating..."
     LANG_COMPLETE="[+] Setup complete!"
     LANG_NEXT="[*] Next steps for Android APK:"
-    LANG_STEP1="[1.] Run: npx cap add android"
-    LANG_STEP2="[2.] Run: npx cap sync"
-    LANG_STEP3="[3.] Make sure you have Android Studio installed"
-    LANG_STEP4="[4.] Run: npx cap open android"
-    LANG_STEP5="[5.] Build APK in Android Studio"
+    LANG_STEP1="[1.] Make sure you have Android Studio installed"
+    LANG_STEP2="[2.] Set ANDROID_HOME: export ANDROID_HOME=~/Library/Android/sdk"
+    LANG_STEP3="[3.] Run: npx cap add android"
+    LANG_STEP4="[4.] Run: npx cap sync"
+    LANG_STEP5="[5.] Build APK: cd android && ./gradlew assembleDebug"
+    LANG_STEP6="[6.] APK will be at: android/app/build/outputs/apk/debug/app-debug.apk"
     LANG_DETAILS="[*] For detailed instructions, see: APK_SETUP.md"
 else
     echo "Invalid choice. Please run again."
@@ -85,7 +87,7 @@ echo ""
 
 # Install dependencies
 echo "$LANG_INSTALL"
-npm install
+npm install --legacy-peer-deps
 
 if [ $? -eq 0 ]; then
     echo "$LANG_INSTALL_SUCCESS"
@@ -112,6 +114,7 @@ echo "  $LANG_STEP2"
 echo "  $LANG_STEP3"
 echo "  $LANG_STEP4"
 echo "  $LANG_STEP5"
+echo "  $LANG_STEP6"
 echo ""
 echo "$LANG_DETAILS"
 echo ""

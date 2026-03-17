@@ -868,3 +868,13 @@ input:focus, textarea:focus, select:focus { border-color: var(--red); }
     display: none;
   }
 }
+
+.time-input {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.time-input input {
+  width: 50px;
+  text-align: center;
+}

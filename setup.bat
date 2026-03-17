@@ -30,15 +30,17 @@ set LANG_NPM_FOUND=[+] npm gevonden
 set LANG_INSTALL=[*] Afhankelijkheden installeren...
 set LANG_INSTALL_SUCCESS=[+] Afhankelijkheden succesvol geinstalleerd
 set LANG_INSTALL_FAIL=[-] Fout bij installatie van afhankelijkheden
+set LANG_ANDROID_HOME=[*] ANDROID_HOME omgevingsvariabele instellen...
 set LANG_CAPACITOR=[*] Capacitor instellen...
 set LANG_CONFIG=[!] capacitor.config.json niet gevonden. Aanmaken...
 set LANG_COMPLETE=[+] Setup voltooid!
 set LANG_NEXT=[*] Volgende stappen voor Android APK:
-set LANG_STEP1=[1.] Voer uit: npx cap add android
-set LANG_STEP2=[2.] Voer uit: npx cap sync
-set LANG_STEP3=[3.] Zorg dat je Android Studio hebt geinstalleerd
-set LANG_STEP4=[4.] Voer uit: npx cap open android
-set LANG_STEP5=[5.] Bouw APK in Android Studio
+set LANG_STEP1=[1.] Zorg dat je Android Studio hebt geinstalleerd
+set LANG_STEP2=[2.] Stel ANDROID_HOME in: setx ANDROID_HOME %%LOCALAPPDATA%%\Android\Sdk
+set LANG_STEP3=[3.] Voer uit: npx cap add android
+set LANG_STEP4=[4.] Voer uit: npx cap sync
+set LANG_STEP5=[5.] Bouw APK: cd android ^&^& gradlew assembleDebug
+set LANG_STEP6=[6.] APK staat in: android\app\build\outputs\apk\debug\app-debug.apk
 set LANG_DETAILS=[*] Voor gedetailleerde instructies, zie: APK_SETUP.md
 
 goto SETUP
@@ -54,15 +56,16 @@ set LANG_NPM_FOUND=[+] npm found
 set LANG_INSTALL=[*] Installing dependencies...
 set LANG_INSTALL_SUCCESS=[+] Dependencies installed successfully
 set LANG_INSTALL_FAIL=[-] Failed to install dependencies
+set LANG_ANDROID_HOME=[*] Setting up ANDROID_HOME environment variable...
 set LANG_CAPACITOR=[*] Setting up Capacitor...
 set LANG_CONFIG=[!] capacitor.config.json not found. Creating...
 set LANG_COMPLETE=[+] Setup complete!
 set LANG_NEXT=[*] Next steps for Android APK:
-set LANG_STEP1=[1.] Run: npx cap add android
-set LANG_STEP2=[2.] Run: npx cap sync
-set LANG_STEP3=[3.] Make sure you have Android Studio installed
-set LANG_STEP4=[4.] Run: npx cap open android
-set LANG_STEP5=[5.] Build APK in Android Studio
+set LANG_STEP1=[1.] Make sure you have Android Studio installed
+set LANG_STEP2=[2.] Set ANDROID_HOME: setx ANDROID_HOME %%LOCALAPPDATA%%\Android\Sdk
+set LANG_STEP3=[3.] Run: npx cap add android
+set LANG_STEP4=[4.] Run: npx cap sync
+set LANG_STEP5=[5.] Build APK: cd android ^&^& gradlew assembleDebug
 set LANG_STEP1=[1.] Make sure you have Android Studio installed
 set LANG_STEP2=[2.] Run: npx cap sync
 set LANG_STEP3=[3.] Run: npx cap open android
@@ -103,7 +106,7 @@ echo.
 
 REM Install dependencies
 echo !LANG_INSTALL!
-call npm install
+call npm install --legacy-peer-deps
 
 if %ERRORLEVEL% EQU 0 (
     echo !LANG_INSTALL_SUCCESS!
@@ -131,6 +134,7 @@ echo   !LANG_STEP2!
 echo   !LANG_STEP3!
 echo   !LANG_STEP4!
 echo   !LANG_STEP5!
+echo   !LANG_STEP6!
 echo.
 echo !LANG_DETAILS!
 echo.
