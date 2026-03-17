@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KartPit — Rondetijd</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body>
     <nav class="navbar">
     <div class="navbar-inner">
-      <a href="index.html" class="nav-logo"><img src="../images/Vonk-Logo.png" alt="Vonk"></a>
+      <a href="index.html" class="nav-logo"><img src="images/Vonk-Logo.png" alt="Vonk"></a>
       <!-- <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="tracks.html">Tracks</a>
@@ -28,7 +28,7 @@
             <div class="flex flex-row">
               <div class="w-1/2">
                   <h3>Rondetijd:</h3>
-                  <form method="post" id="Kart1">
+                  <form id="Kart1">
                       <div class="time-input">
                         <input type="number" id="minutes" min="0" max="59" maxlength="2" placeholder="mm" oninput="moveToNext(this, 'seconds')" /> :
                         <input type="number" id="seconds" min="0" max="59" maxlength="2" placeholder="ss" oninput="moveToNext(this, 'milliseconds')" /> :
@@ -43,7 +43,7 @@
                         </script>
                       </div>
                       <br><br>
-                      <input type="submit">
+                      <input type="submit" id="toevoegknop">
                   </form>
                   <br><br>
                   <h3>Snelste tijd:</h3>
@@ -68,7 +68,6 @@
                   <h4 id="Ronde3">XX:XX,xxx</h4>
                   <br>
               </div>
-              <script src="../js/rondetijd.js"></script>
             </div>
           </div>
           <div class="w-1/2">
@@ -128,5 +127,6 @@
       </form>
     </div>
   </main>
+  <script src="../js/rondetijd.js"></script>
 </body>
 </html>
