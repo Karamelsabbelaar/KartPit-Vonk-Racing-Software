@@ -1,12 +1,23 @@
 const knop = document.getElementById('toevoegknop');
+let Rondes = 0;
+let Fast = 0;
+let Slow = 0;
+let Ronde3 = 0;
+let Ronde2 = 0;
+let Ronde1 = 0;
+let Total = 0;
 knop.addEventListener('click', () => {
-    let MM = document.getElementById('minutes'),
-    SS = document.getElementById('seconds'),
-    MS = document.getElementById('milliseconds');
-    console.log(MM)
+    let MM = document.forms["Kart1"]["minutes"].value,
+    SS = document.forms["Kart1"]["seconds"].value,
+    MS = document.forms["Kart1"]["milliseconds"].value;
+    console.log(MM);
+    console.log(SS);
+    console.log(MS);
     Rondes = Rondes + 1;
 
-    let Time = MM * 60 * 100 + SS * 100 + MS;
+    let Time = (MM * 60 * 100) + (SS * 100) + MS;
+
+    console.log(Time)
 
     const ERonde1 = document.getElementById("Ronde1");
     const ERonde2 = document.getElementById("Ronde2");
@@ -20,9 +31,9 @@ knop.addEventListener('click', () => {
         EFast.textContent = MM, ":", SS, ",", MS;
     }
 
-    let Ronde3 = Ronde2;
-    let Ronde2 = Ronde1;
-    let Ronde1 = Time;
+    Ronde3 = Ronde2;
+    Ronde2 = Ronde1;
+    Ronde1 = Time;
 
     let MM3 = Math.round(Ronde3 / 100 / 60);
     let SS3 = Math.round(Ronde3 -(MM3 * 60 * 100) / 100);
@@ -34,7 +45,10 @@ knop.addEventListener('click', () => {
 
     let MM1 = Math.round(Ronde1 / 100 / 60);
     let SS1 = Math.round(Ronde1 -(MM1 * 60 * 100) / 100);
-    let MS1 = Math.round(Ronde1 -(SS1 * 100))
+    let MS1 = Math.round(Ronde1 -(SS1 * 100 + MM1 * 60 * 100))
+    console.log(MM1);
+    console.log(SS1);
+    console.log(MS1);
 
     ERonde1.textContent = MM1, ":", SS1, ",", MS1;
     ERonde2.textContent = MM2, ":", SS2, ",", MS2;
@@ -45,7 +59,7 @@ knop.addEventListener('click', () => {
         ESlow.textContent = MM, ":", SS, ",", MS;
     }
 
-    let Total = Total + Time;
+    Total = Total + Time;
 
     let Gem = Total / Rondes;
 
