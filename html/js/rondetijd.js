@@ -8,9 +8,16 @@ knop.addEventListener('click', () => {
 
     let Time = MM * 60 * 100 + SS * 100 + MS;
 
+    const ERonde1 = document.getElementById("Ronde1");
+    const ERonde2 = document.getElementById("Ronde2");
+    const ERonde3 = document.getElementById("Ronde3");
+    const EFast = document.getElementById("FastTime");
+    const ESlow = document.getElementById("SlowTime");
+    const EGem = document.getElementById("GemTime");
+
     if (Time > Fast){
         Fast = Time
-        document.getElementById("SlowTime").innerHTML = MM, ":", SS, ",", MS;
+        EFast.textContent = MM, ":", SS, ",", MS;
     }
 
     let Ronde3 = Ronde2;
@@ -29,13 +36,13 @@ knop.addEventListener('click', () => {
     let SS1 = Math.round(Ronde1 -(MM1 * 60 * 100) / 100);
     let MS1 = Math.round(Ronde1 -(SS1 * 100))
 
-    document.getElementById("Ronde1").innerHTML = MM1, ":", SS1, ",", MS1;
-    document.getElementById("Ronde2").innerHTML = MM2, ":", SS2, ",", MS2;
-    document.getElementById("Ronde3").innerHTML = MM3, ":", SS3, ",", MS3;
+    ERonde1.textContent = MM1, ":", SS1, ",", MS1;
+    ERonde2.textContent = MM2, ":", SS2, ",", MS2;
+    ERonde3.textContent = MM3, ":", SS3, ",", MS3;
 
     if (Time < Slow){
         Slow = Time
-        document.getElementById("SlowTime").innerHTML = MM, ":", SS, ",", MS;
+        ESlow.textContent = MM, ":", SS, ",", MS;
     }
 
     let Total = Total + Time;
@@ -45,4 +52,6 @@ knop.addEventListener('click', () => {
     let GemMM = Math.round(Gem / 100 / 60);
     let GemSS = Math.round(Gem -(GemMM * 60 * 100) / 100);
     let GemMS = Math.round(Gem -(GemSS * 100));
+
+    EGem.textContent = GemMM, ":", GemSS, ",", GemMS;
 });
