@@ -28,7 +28,7 @@
             <div class="flex flex-row">
               <div class="w-1/2">
                   <h3>Rondetijd:</h3>
-                  <form method="post">
+                  <form method="post" id="Kart1">
                       <div class="time-input">
                         <input type="number" id="minutes" min="0" max="59" maxlength="2" placeholder="mm" oninput="moveToNext(this, 'seconds')" /> :
                         <input type="number" id="seconds" min="0" max="59" maxlength="2" placeholder="ss" oninput="moveToNext(this, 'milliseconds')" /> :
@@ -48,11 +48,11 @@
                   <br><br>
                   <h3>Snelste tijd:</h3>
                   <br>
-                  <h4>XX:XX,xxx</h4>
+                  <h4 id="FastTime">XX:XX,xxx</h4>
                   <br><br>
                   <h3>Langzaamste tijd:</h3>
                   <br>
-                  <h4>XX:XX,xxx</h4>
+                  <h4 id="SlowTime">XX:XX,xxx</h4>
               </div>
               <div class="w-1/2">
                   <h3>Gem. tijd:</h3>
@@ -61,13 +61,14 @@
                   <br><br>
                   <h3>Laatste tijden:</h3>
                   <br>
-                  <h4>XX:XX,xxx</h4>
+                  <h4 id="Ronde1">XX:XX,xxx</h4>
                   <br>
-                  <h4>XX:XX,xxx</h4>
+                  <h4 id="Ronde2">XX:XX,xxx</h4>
                   <br>
-                  <h4>XX:XX,xxx</h4>
+                  <h4 id="Ronde3">XX:XX,xxx</h4>
                   <br>
               </div>
+              <script src="../js/rondetijd.js"></script>
             </div>
           </div>
           <div class="w-1/2">
@@ -76,7 +77,7 @@
             <div class="flex flex-row">
               <div class="w-1/2">
                   <h3>Rondetijd:</h3>
-                  <form method="post">
+                  <form method="post" id="Kart2">
                       <div class="time-input">
                         <input type="number" id="minutes" min="0" max="59" maxlength="2" placeholder="mm" oninput="moveToNext(this, 'seconds')" /> :
                         <input type="number" id="seconds" min="0" max="59" maxlength="2" placeholder="ss" oninput="moveToNext(this, 'milliseconds')" /> :
