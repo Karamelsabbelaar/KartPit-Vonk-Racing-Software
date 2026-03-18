@@ -54,6 +54,19 @@ if exist "!CAP_ASSETS!" (
     xcopy "%~dp0html\*" "!BUILD_ASSETS!\public\" /E /I /Y >nul 2>&1
 )
 
+REM Copy icons from repo into Android project
+echo [*] Copying app icons...
+set ICONS_SRC=%~dp0icons
+set ICONS_DST=%~dp0android\android-template\app\src\main\res
+if exist "!ICONS_SRC!" (
+    for %%d in (mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi mipmap-anydpi-v26) do (
+        if exist "!ICONS_SRC!\%%d" ( xcopy "!ICONS_SRC!\%%d\*" "!ICONS_DST!\%%d\" /I /Y >nul 2>&1 )
+    )
+    echo [+] Icons copied
+) else (
+    echo [-] Warning: icons/ folder not found, using default icons
+)
+
 REM Setup Android local properties (Android SDK path)
 echo [*] Configuring Android SDK...
 if not exist "android\android-template\local.properties" (
@@ -92,7 +105,7 @@ if exist "app\build\outputs\apk\debug\app-debug.apk" (
     echo   Build Complete!
     echo =====================================
     echo.
-    echo Next step: Install the APK on your Android device using O+ Connect or ADB
+    echo Next step: Install the APK on your Android device using ADB or installing the apk on the device
     pause
 ) else (
     echo [-] APK file not found after build
