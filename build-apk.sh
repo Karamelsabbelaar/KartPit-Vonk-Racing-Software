@@ -51,6 +51,22 @@ else
     cp -r "$SCRIPT_DIR/html/"* "$BUILD_ASSETS/public/"
 fi
 
+# Copy icons from repo into Android project
+echo "[*] Copying app icons..."
+ICONS_SRC="$SCRIPT_DIR/icons"
+ICONS_DST="$SCRIPT_DIR/android/android-template/app/src/main/res"
+if [ -d "$ICONS_SRC" ]; then
+    for density in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi mipmap-anydpi-v26; do
+        if [ -d "$ICONS_SRC/$density" ]; then
+            mkdir -p "$ICONS_DST/$density"
+            cp -f "$ICONS_SRC/$density/"* "$ICONS_DST/$density/"
+        fi
+    done
+    echo "[+] Icons copied"
+else
+    echo "[-] Warning: icons/ folder not found, using default icons"
+fi
+
 # Setup Android local properties (Android SDK path)
 echo "[*] Configuring Android SDK..."
 if [ ! -f "android/android-template/local.properties" ]; then
@@ -80,16 +96,17 @@ fi
 if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
     echo "[+] APK built successfully!"
     
-    # Copy to Desktop
-    echo "[*] Copying APK to Desktop..."
-    cp "app/build/outputs/apk/debug/app-debug.apk" "$HOME/Desktop/app-debug.apk"
-    echo "[+] APK copied to: $HOME/Desktop/app-debug.apk"
+    # Copy to project build/ folder
+    echo "[*] Copying APK to build folder..."
+    mkdir -p "$SCRIPT_DIR/build"
+    cp "app/build/outputs/apk/debug/app-debug.apk" "$SCRIPT_DIR/build/kartpit.apk"
+    echo "[+] APK copied to: $SCRIPT_DIR/build/kartpit.apk"
     echo ""
     echo "====================================="
     echo "   Build Complete!"
     echo "====================================="
     echo ""
-    echo "Next step: Install the APK on your Android device using O+ Connect or ADB"
+    echo "Next step: Install the APK on your Android device using ADB or by manually installing the APK on the device"
 else
     echo "[-] APK file not found after build"
     exit 1

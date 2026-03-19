@@ -58,6 +58,11 @@ function setActiveNav() {
 document.addEventListener('DOMContentLoaded', () => {
   Modal.init();
   setActiveNav();
+
+  // Fullscreen: hide status bar — only on Capacitor (Android), not in browser
+  if (window.Capacitor && document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
 });
 
 // Tracks toevoegen //
