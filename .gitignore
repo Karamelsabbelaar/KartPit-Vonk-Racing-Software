@@ -3,8 +3,13 @@ node_modules/
 package-lock.json
 yarn.lock
 
-# Android
-android/
+# Android - ignore sync output and build artifacts, but keep the template
+android/app/
+android/capacitor-cordova-android-plugins/
+android/android-template/.gradle/
+android/android-template/build/
+android/android-template/app/build/
+android/android-template/local.properties
 ios/
 www/
 
