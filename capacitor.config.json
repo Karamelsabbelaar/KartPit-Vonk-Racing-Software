@@ -1,16 +1,16 @@
 {
-  "appId": "com.vonkracing.kartpit",
+  "appId": "vonk.kartpit.nl",
   "appName": "KartPit",
   "webDir": "html",
-  "bundledWebRuntime": false,
+  "build": {
+    "android": {
+      "minWebViewVersion": 90
+    }
+  },
   "plugins": {
     "LocalNotifications": {
       "smallIcon": "ic_stat_notification",
       "iconColor": "#F8AB21"
     }
-  },
-  "server": {
-    "url": "http://localhost:5000",
-    "cleartext": true
   }
 }

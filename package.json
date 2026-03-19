@@ -5,18 +5,17 @@
   "main": "app.py",
   "scripts": {
     "build": "echo 'Build complete'",
-    "cap:build": "capacitor build",
-    "cap:sync": "capacitor sync",
-    "cap:open:android": "capacitor open android",
-    "cap:open:ios": "capacitor open ios"
+    "start": "ionic serve",
+    "android": "ionic capacitor build android --prod",
+    "android:open": "ionic capacitor open android"
   },
   "dependencies": {
-    "@capacitor/android": "6.1.0",
-    "@capacitor/core": "6.1.0",
-    "@capacitor/local-notifications": "6.1.0"
+    "@capacitor/core": "^8.2.0",
+    "@capacitor/local-notifications": "^8.0.2"
   },
   "devDependencies": {
-    "@capacitor/cli": "6.1.0"
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^8.2.0"
   },
   "overrides": {
     "tar": ">=6.2.0",

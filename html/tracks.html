@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KartPit — Tracks</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="wrapper">
 
   <nav class="navbar">
     <div class="navbar-inner">
-      <a href="index.html" class="nav-logo"><img src="../images/Vonk-Logo.png" alt="Vonk"></a>
+      <a href="index.html" class="nav-logo"><img src="images/Vonk-Logo.png" alt="Vonk"></a>
 
   </nav>
 
@@ -46,8 +46,12 @@
       </div>
       <div class="form-row">
         <div class="form-group" style="max-width:140px">
-          <label class="form-label">Beste Ronde</label>
-          <input type="text" id="tr-lap" placeholder="bijv. 47.2s" />
+          <label class="form-label">Datum</label>
+          <input type="date" id="tr-date"/>
+        </div>
+        <div class="form-group" style="max-width:100px">
+          <label class="form-label">Layout url</label>
+          <input type="url" id="tr-layout" placeholder="Werkt nog niet" />
         </div>
         <div class="form-group" style="max-width:160px">
           <label class="form-label">Type</label>
@@ -79,7 +83,77 @@
 <div id="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase.config.js"></script>
-<script src="../js/main.js"></script>
+<script src="js/supabase.config.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const TYPE_BADGE = { indoor: 'badge-blue', outdoor: 'badge-green' };
+
+  async function renderTracks() {
+    const grid = document.getElementById('tracks-grid');
+    try {
+      const data = await Tracks.getAll();
+      if (!data.length) {
+        grid.innerHTML = '<p style="color:var(--text3)">Nog geen tracks — voeg er een toe.</p>';
+        return;
+      }
+      grid.innerHTML = data.map(t => `
+        <div class="track-card">
+          <div class="track-header">
+            <div>
+              <div class="track-name">${t.name}</div>
+              <div style="font-size:13px;color:var(--text3);margin-top:2px">📍 ${t.location}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+              <span class="badge ${TYPE_BADGE[t.type] || 'badge-yellow'}">${t.type}</span>
+              <button onclick="deleteTrack(${t.id})" class="btn btn-ghost btn-sm" style="opacity:0.4">✕</button>
+            </div>
+          </div>
+          <div class="track-body">
+            <div class="track-stat"><span class="track-stat-label">Lengte</span><span class="track-stat-value">${t.length_m}m</span></div>
+            <div class="track-stat"><span class="track-stat-label">Bochten</span><span class="track-stat-value">${t.turns}</span></div>
+            <div class="track-stat"><span class="track-stat-label">Beste Ronde</span><span class="track-stat-value" style="color:var(--yellow)">${t.best_lap}</span></div>
+            ${t.notes ? `<div class="track-notes">💡 ${t.notes}</div>` : ''}
+          </div>
+        </div>`).join('');
+    } catch(e) {
+      grid.innerHTML = `<p style="color:var(--red)">Fout: ${e.message}</p>`;
+    }
+  }
+
+  async function addTrack() {
+    const get = id => document.getElementById(id).value;
+    const name = get('tr-name').trim();
+    if (!name) { Toast.show('Tracknaam is verplicht', 'error'); return; }
+    try {
+      await Tracks.add({
+        name,
+        location: get('tr-loc'),
+        length_m: parseInt(get('tr-len')) || 0,
+        turns:    parseInt(get('tr-turns')) || 0,
+        datum:    get('tr-date') || '–',
+        type:     get('tr-type'),
+        notes:    get('tr-notes')
+      });
+      ['tr-name','tr-loc','tr-len','tr-turns','tr-date','tr-notes'].forEach(id => document.getElementById(id).value = '');
+      Toast.show('Track toegevoegd', 'success');
+      renderTracks();
+    } catch(e) {
+      Toast.show('Fout: ' + e.message, 'error');
+    }
+  }
+
+  async function deleteTrack(id) {
+    if (!confirm('Track verwijderen?')) return;
+    try {
+      await Tracks.remove(id);
+      Toast.show('Track verwijderd', 'success');
+      renderTracks();
+    } catch(e) {
+      Toast.show('Fout: ' + e.message, 'error');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', renderTracks);
+</script>
 </body>
 </html>
