@@ -96,10 +96,11 @@ fi
 if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
     echo "[+] APK built successfully!"
     
-    # Copy to Desktop
-    echo "[*] Copying APK to Desktop..."
-    cp "app/build/outputs/apk/debug/app-debug.apk" "$HOME/Desktop/app-debug.apk"
-    echo "[+] APK copied to: $HOME/Desktop/app-debug.apk"
+    # Copy to project build/ folder
+    echo "[*] Copying APK to build folder..."
+    mkdir -p "$SCRIPT_DIR/build"
+    cp "app/build/outputs/apk/debug/app-debug.apk" "$SCRIPT_DIR/build/kartpit.apk"
+    echo "[+] APK copied to: $SCRIPT_DIR/build/kartpit.apk"
     echo ""
     echo "====================================="
     echo "   Build Complete!"

@@ -96,10 +96,11 @@ REM Check if APK was created
 if exist "app\build\outputs\apk\debug\app-debug.apk" (
     echo [+] APK built successfully!
     
-    REM Copy to Desktop
-    echo [*] Copying APK to Desktop...
-    copy "app\build\outputs\apk\debug\app-debug.apk" "%USERPROFILE%\Desktop\app-debug.apk" /Y
-    echo [+] APK copied to: %USERPROFILE%\Desktop\app-debug.apk
+    REM Copy to project build/ folder
+    echo [*] Copying APK to build folder...
+    if not exist "%~dp0build" ( mkdir "%~dp0build" )
+    copy "app\build\outputs\apk\debug\app-debug.apk" "%~dp0build\kartpit.apk" /Y
+    echo [+] APK copied to: %~dp0build\kartpit.apk
     echo.
     echo =====================================
     echo   Build Complete!
