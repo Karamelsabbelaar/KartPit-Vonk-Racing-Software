@@ -112,10 +112,26 @@ const Realtime = {
 
 // ── Lap Times ─────────────────────────────────────────────
 const knopje1 = document.getElementById("toevoegknop");
+async function addItem() {
+  
+}
 knopje1.addEventListener('click', () => {
   driver = Name1;
   lap_ms = Time;
   lap_number = Rondes;
+  console.log("Driver:", driver);
+  console.log("Lap number:", lap_number);
+  console.log("Lap time (ms):", lap_ms);
+  addLapTime();
+
+});
+async function addLapTime() {
+   try {
+    await LapTimes.add(driver, lap_number, lap_ms);
+  } catch(e) {
+  }
+}
+
 const LapTimes = {
   async getAll() {
     const { data, error } = await db.from('tracks').select('*').order('name');
@@ -131,7 +147,6 @@ const LapTimes = {
     if (error) throw error;
   }
 };
-});
 
 const knopje2 = document.getElementById("toevoegknop2");
 knopje2.addEventListener('click', () => {
