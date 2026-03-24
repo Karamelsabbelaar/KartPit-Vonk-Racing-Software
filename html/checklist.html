@@ -6,6 +6,10 @@
   <title>KartPit — Checklist</title>
   <link rel="stylesheet" href="css/style.css">
   <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
+  <script type="module">
+    import { supabase } from './js/auth-guard.js';
+    window.supabase = supabase;
+  </script>
 </head>
 <body>
 <div class="wrapper">

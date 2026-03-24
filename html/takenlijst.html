@@ -12,12 +12,17 @@
     .badge-cat-blue   { background:#d6eaff; color:#003f7a; border:1px solid #90c0f0; font-weight:700; }
     .badge-cat-green  { background:#d6f5e3; color:#004d25; border:1px solid #80d4a0; font-weight:700; }
     .badge-cat-purple { background:#edd6ff; color:#3d007a; border:1px solid #c090f0; font-weight:700; }
+    .badge-gray { background:#ebebeb; color:#333; border:1px solid #ccc; font-weight:600; }
     [data-theme="dark"] .badge-cat-red    { background:#4a0016; color:#ff7090; border-color:#8a2040; }
     [data-theme="dark"] .badge-cat-orange { background:#3a2000; color:#ffb060; border-color:#7a5010; }
     [data-theme="dark"] .badge-cat-blue   { background:#001a3a; color:#60aaff; border-color:#204080; }
     [data-theme="dark"] .badge-cat-green  { background:#001a10; color:#50d080; border-color:#205040; }
     [data-theme="dark"] .badge-cat-purple { background:#1a0040; color:#c080ff; border-color:#502090; }
   </style>
+  <script type="module">
+    import { supabase } from './js/auth-guard.js';
+    window.supabase = supabase;
+  </script>
 </head>
 <body>
 <div class="wrapper">
