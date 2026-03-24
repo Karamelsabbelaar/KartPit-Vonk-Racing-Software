@@ -74,6 +74,41 @@ const Pitstops = {
   }
 };
 
+// ── Bandenspanning ─────────────────────────────────────────────
+const TirePressures = {
+  async getAll() {
+    const { data, error } = await db.from('tire_pressures')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
+  },
+  async getByPitstop(pitstopId) {
+    const { data, error } = await db.from('tire_pressures')
+      .select('*')
+      .eq('pitstop_id', pitstopId)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  },
+  async add(trackId, pitstopId, lv, rv, la, ra) {
+    const { error } = await db.from('tire_pressures').insert({
+      track_id:      trackId,
+      pitstop_id:    pitstopId,
+      Links_voor:    lv,
+      Rechts_voor:   rv,
+      Links_achter:  la,
+      Rechts_achter: ra
+    });
+    if (error) throw error;
+  },
+  async remove(id) {
+    const { error } = await db.from('tire_pressures').delete().eq('id', id);
+    if (error) throw error;
+  }
+};
+
+
 // ── Tracks ────────────────────────────────────────────────────
 const Tracks = {
   async getAll() {
