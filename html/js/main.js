@@ -208,6 +208,20 @@ async function signOutGlobal() {
   window.location.href = 'login.html';
 }
 
+// ── Admin nav link (only shown to admins) ──────────────────────
+async function initAdminLink() {
+  try {
+    if (typeof db === 'undefined') return;
+    const { data: { session } } = await db.auth.getSession();
+    if (session?.user?.app_metadata?.role !== 'admin') return;
+    const nav = document.querySelector('.side-menu-nav');
+    if (!nav || nav.querySelector('a[href="admin.html"]')) return;
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="admin.html" class="side-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Accountbeheer</a>`;
+    nav.appendChild(li);
+  } catch(_) {}
+}
+
 // ── Init ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -215,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Modal.init();
   setActiveNav();
   initBackTransition();
+  initAdminLink();
 
   // Fullscreen: hide status bar — only on Capacitor (Android), not in browser
   if (window.Capacitor && document.documentElement.requestFullscreen) {
