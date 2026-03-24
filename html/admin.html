@@ -56,11 +56,11 @@
   </div>
 
   <div class="card" style="margin-bottom:24px;padding:24px;">
-    <div class="alert" id="createAlert">
+    <div class="alert" id="createAlert" style="margin-bottom:16px;">
       <span id="createAlertIcon">&#9888;</span>
       <span id="createAlertText"></span>
     </div>
-    <div class="form-row">
+    <div class="form-row" style="align-items:flex-start;">
       <div class="form-group">
         <label class="form-label" for="newEmail">E-mailadres</label>
         <input class="form-input" type="email" id="newEmail" placeholder="naam@kartpit.nl" />
@@ -76,7 +76,7 @@
         <input class="form-input" type="text" id="newPassword" placeholder="Min. 8 tekens" />
         <span class="form-error" id="pwErr">Minimaal 8 tekens.</span>
       </div>
-      <div class="form-group" style="max-width:160px;">
+      <div class="form-group" style="max-width:150px;flex:0 0 150px;">
         <label class="form-label" for="newRole">Rol</label>
         <select class="form-select" id="newRole">
           <option value="user">Gebruiker</option>
@@ -84,8 +84,8 @@
         </select>
       </div>
       <div class="form-group" style="flex:0;">
-        <label class="form-label">&nbsp;</label>
-        <button class="btn btn-red" id="createBtn">+ AANMAKEN</button>
+        <label class="form-label" style="visibility:hidden;">&#8203;</label>
+        <button class="btn btn-red" id="createBtn" style="white-space:nowrap;">+ AANMAKEN</button>
       </div>
     </div>
   </div>
@@ -97,7 +97,14 @@
   </div>
 
   <div class="card" style="padding:0;overflow:hidden;">
-    <table class="data-table">
+    <table class="data-table" style="table-layout:fixed;">
+      <colgroup>
+        <col style="width:22%">
+        <col style="width:28%">
+        <col style="width:14%">
+        <col style="width:18%">
+        <col style="width:18%">
+      </colgroup>
       <thead>
         <tr>
           <th>Naam</th>
@@ -227,10 +234,10 @@
         : '<span class="badge badge-gray">Gebruiker</span>';
       return `
         <tr>
-          <td>${name}${isMe ? ' <span class="badge badge-green" style="margin-left:6px;">jij</span>' : ''}</td>
-          <td style="color:var(--text2)">${u.email || '\u2014'}</td>
+          <td style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name}${isMe ? ' <span class="badge badge-green" style="margin-left:6px;">jij</span>' : ''}</td>
+          <td style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;">${u.email || '\u2014'}</td>
           <td>${badge}</td>
-          <td style="color:var(--text3)">${date}</td>
+          <td style="color:var(--text3);font-size:13px;">${date}</td>
           <td style="text-align:right;">
             ${!isMe ? `<button class="btn btn-danger btn-sm" onclick="promptDelete('${u.id}','${(u.email||'').replace(/'/g,"\\'")}')">Verwijderen</button>` : ''}
           </td>
