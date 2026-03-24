@@ -323,3 +323,9 @@ async function loadAgendaPreview() {
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('agenda-preview')) loadAgendaPreview();
 });
+
+// ── Banden Spanning ─────────────────────────────────────────────
+async function renderTirePressures() {
+  const pressure = document.getElementById('tire-pressures');
+  if (!pressure) return;
+}
