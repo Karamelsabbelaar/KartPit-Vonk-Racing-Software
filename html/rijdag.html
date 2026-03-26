@@ -5,7 +5,9 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KartPit — Rijdag Schema</title>
-  <link rel="stylesheet" href="css/style.css">  <script type="module">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light'); document.documentElement.classList.add('preload'); try { if (!localStorage.getItem('sb-tzzuxemddkgvgipsaadr-auth-token')) window.location.replace('login.html'); } catch(e) {}</script>
+  <script type="module">
     import { supabase } from './js/auth-guard.js';
     window.supabase = supabase;
   </script></head>

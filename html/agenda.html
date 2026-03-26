@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KartPit — Agenda</title>
   <link rel="stylesheet" href="css/style.css">
-  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light'); document.documentElement.classList.add('preload'); try { if (!localStorage.getItem('sb-tzzuxemddkgvgipsaadr-auth-token')) window.location.replace('login.html'); } catch(e) {}</script>
   <script type="module">
     import { supabase } from './js/auth-guard.js';
     window.supabase = supabase;
@@ -116,7 +116,7 @@
             <div class="agenda-content">
               <div class="agenda-event">${item.event}</div>
               <span class="badge ${c.badge}">${item.type}</span>
-              <button onclick="deleteEvent(${item.id})" class="btn btn-ghost btn-sm" style="margin-left:8px;opacity:0.4">✕</button>
+              <button onclick="deleteEvent(${item.id})" class="btn btn-ghost btn-sm" aria-label="Verwijder">✕</button>
             </div>
           </div>`;
       }).join('');

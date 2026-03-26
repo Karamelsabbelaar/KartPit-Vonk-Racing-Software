@@ -2,6 +2,12 @@
  * KartPit — Gedeelde utilities
  */
 
+// ── Service Worker ─────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js', { scope: './' })
+    .catch(() => {}); // silently fail in non-HTTPS dev environments
+}
+
 // ── Toast ──────────────────────────────────────────────────────
 const Toast = {
   show(msg, type = 'success', duration = 3000) {
@@ -107,12 +113,11 @@ function initBackTransition() {
 function _gurrenTrigger() {
   // ???%
   console.groupCollapsed('%c⚡ ROW ROW FIGHT THE POWER ⚡', 'color:#ffd700;font-weight:bold;font-size:15px');
-  console.log('%c"Who the hell do you think I am?!"\n — Kamina, Gurren Lagann', 'color:#f0a500;font-family:monospace');
-  console.log('%c"Don\'t believe in yourself.\n Believe in me — who believes in you."\n — Kamina', 'color:#ccc;font-family:monospace');
+  console.log('%c"Don\'t believe in yourself!\nBelieve in me!\nBelieve in the Kamina who believes in you!"\n — Kamina, Gurren Lagann', 'color:#f0a500;font-family:monospace;font-size:13px');
   console.log('%c"At ???%... I surpass my limits."\n — Shigeo Kageyama, Mob Psycho 100', 'color:#9b59b6;font-family:monospace');
   console.log('%c🌀', 'font-size:48px');
   console.groupEnd();
-  Toast.show('Row row, fight the power! ⚡', 'success', 4000);
+  Toast.show('Don\'t believe in yourself!\nBelieve in me!\nBelieve in the Kamina who believes in you! ⚡', 'success gurren', 5000);
 }
 
 // ── Dark Mode ──────────────────────────────────────────────────
@@ -150,6 +155,48 @@ function _updateThemeBtn(theme) {
     } else {
       btn.innerHTML = icon;
     }
+  });
+}
+
+// ── Custom Number Steppers ─────────────────────────────────────
+function initNumberSteppers() {
+  document.querySelectorAll('input[type="number"]').forEach(input => {
+    if (input.closest('.num-stepper')) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'num-stepper';
+
+    const minus = document.createElement('button');
+    minus.type = 'button';
+    minus.className = 'num-stepper-btn';
+    minus.setAttribute('aria-label', 'Minder');
+    minus.textContent = '−';
+    minus.addEventListener('click', () => {
+      const step = parseFloat(input.step) || 1;
+      const min  = input.min !== '' ? parseFloat(input.min) : -Infinity;
+      const cur  = parseFloat(input.value) || 0;
+      input.value = Math.max(min, parseFloat((cur - step).toFixed(10)));
+      input.dispatchEvent(new Event('input',  { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    const plus = document.createElement('button');
+    plus.type = 'button';
+    plus.className = 'num-stepper-btn';
+    plus.setAttribute('aria-label', 'Meer');
+    plus.textContent = '+';
+    plus.addEventListener('click', () => {
+      const step = parseFloat(input.step) || 1;
+      const max  = input.max !== '' ? parseFloat(input.max) : Infinity;
+      const cur  = parseFloat(input.value) || 0;
+      input.value = Math.min(max, parseFloat((cur + step).toFixed(10)));
+      input.dispatchEvent(new Event('input',  { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    input.parentNode.insertBefore(wrapper, input);
+    wrapper.appendChild(minus);
+    wrapper.appendChild(input);
+    wrapper.appendChild(plus);
   });
 }
 
@@ -203,12 +250,14 @@ async function initAdminLink() {
 
 // ── Init ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  document.documentElement.classList.remove('preload');
   initTheme();
   initHamburgerMenu();
   Modal.init();
   setActiveNav();
   initBackTransition();
   initAdminLink();
+  initNumberSteppers();
 
   // Fullscreen: hide status bar — only on Capacitor (Android), not in browser
   if (window.Capacitor && document.documentElement.requestFullscreen) {
