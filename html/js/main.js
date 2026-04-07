@@ -2,6 +2,12 @@
  * KartPit — Shared utilities
  */
 
+// ── Service Worker ─────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../sw.js', { scope: './' })
+    .catch(() => {}); // silently fail in non-HTTPS dev environments
+}
+
 // ── Toast ──────────────────────────────────────────────────────
 const Toast = {
   show(msg, type = 'success', duration = 3000) {
@@ -262,6 +268,7 @@ async function initAdminLink() {
 document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.classList.remove('preload');
   initTheme();
+  OfflineSync.initialize();
   initHamburgerMenu();
   Modal.init();
   setActiveNav();

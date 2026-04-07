@@ -432,6 +432,98 @@ OfflineSync.registerRefreshHandler('tracks',
   () => typeof renderTracks === 'function' && renderTracks(),
 );
 
-// Real-time data only — must be connected to Supabase
-// No offline queue, no background sync
-// All data operations require an active network connection
+// Module wrappers for offline support
+// Each module has its own offline-aware methods for add/update/delete
+
+// Checklist module
+const checklistRaw = OfflineSync.makeOfflineWrapper(Checklist, 'checklist_items');
+Object.assign(Checklist, {
+  async toggle(id, done) {
+    try {
+      await checklistRaw.toggle(id, done);
+      await OfflineSync.updateOne('checklist_items', id, { done });
+    } catch (e) {
+      if (OfflineSync.isNetworkError(e)) {
+        await OfflineSync.updateOne('checklist_items', id, { done });
+        await OfflineSync.queueOperation({ table: 'checklist_items', op: 'update', data: { done }, filter: { id } });
+        return;
+      }
+      throw e;
+    }
+  },
+
+  async add(item, category) {
+    try { await checklistRaw.add(item, category); } catch (e) {
+      if (OfflineSync.isNetworkError(e)) {
+        await OfflineSync.saveOne('checklist_items', { id: OfflineSync.generateTempId(), item, category, done: false });
+        await OfflineSync.queueOperation({ table: 'checklist_items', op: 'insert', data: { item, category, done: false } });
+        OfflineSync.notifyRefresh('checklist_items');
+        return;
+      }
+      throw e;
+    }
+  },
+
+  async resetAll() {
+    try { await checklistRaw.resetAll(); } catch (e) {
+      if (OfflineSync.isNetworkError(e)) {
+        await OfflineSync.saveAll('checklist_items', { done: false });
+        await OfflineSync.queueOperation({ table: 'checklist_items', op: 'update', data: { done: false }, filter: { neqId: 0 } });
+        OfflineSync.notifyRefresh('checklist_items');
+        return;
+      }
+      throw e;
+    }
+  },
+});
+
+// Agenda module
+const agendaRaw = OfflineSync.makeOfflineWrapper(Agenda, 'agenda');
+Object.assign(Agenda, {
+  async add(time, event, type) {
+    try { await agendaRaw.add(time, event, type); } catch (e) {
+      if (OfflineSync.isNetworkError(e)) {
+        await OfflineSync.saveOne('agenda', { id: OfflineSync.generateTempId(), time, event, type });
+        await OfflineSync.queueOperation({ table: 'agenda', op: 'insert', data: { time, event, type } });
+        OfflineSync.notifyRefresh('agenda');
+        return;
+      }
+      throw e;
+    }
+  },
+});
+
+// Pitstops module
+const pitstopsRaw = OfflineSync.makeOfflineWrapper(Pitstops, 'pitstops');
+Object.assign(Pitstops, {
+  async save(duration_ms, label, notes) {
+    try { await pitstopsRaw.save(duration_ms, label, notes); } catch (e) {
+      if (OfflineSync.isNetworkError(e)) {
+        await OfflineSync.saveOne('pitstops', {
+          id: OfflineSync.generateTempId(), duration_ms, label, notes,
+          created_at: new Date().toISOString(),
+        });
+        await OfflineSync.queueOperation({ table: 'pitstops', op: 'insert', data: { duration_ms, label, notes } });
+        OfflineSync.notifyRefresh('pitstops');
+        return;
+      }
+      throw e;
+    }
+  },
+});
+
+// Tracks module
+const tracksRaw = OfflineSync.makeOfflineWrapper(Tracks, 'tracks');
+Object.assign(Tracks, {
+  async add(track) {
+    try { await tracksRaw.add(track); } catch (e) {
+      if (OfflineSync.isNetworkError(e)) {
+        await OfflineSync.saveOne('tracks', { id: OfflineSync.generateTempId(), ...track });
+        await OfflineSync.queueOperation({ table: 'tracks', op: 'insert', data: track });
+        OfflineSync.notifyRefresh('tracks');
+        return;
+      }
+      throw e;
+    }
+  },
+});
