@@ -1,19 +1,21 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f0f1a" media="(prefers-color-scheme: dark)">
   <title>KartPit — Home</title>
   <link rel="stylesheet" href="css/style.css">
-  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light'); document.documentElement.classList.add('preload'); try { if (!localStorage.getItem('sb-tzzuxemddkgvgipsaadr-auth-token')) window.location.replace('login.html'); } catch(e) {}</script>
   <script type="module">
     import { supabase } from './js/auth-guard.js';
     window.supabase = supabase;
   </script>
 
 </head>
-<body>
+<body style="background-color:#ffffff;color:#e94a7a">
 <div class="wrapper home-page">
 
 <nav class="navbar">
@@ -125,32 +127,53 @@
     session: 'badge-blue', pitstop: 'badge-green'
   };
 
+  function renderAgendaPreview(agenda) {
+    const tbody = document.getElementById('agenda-preview');
+    if (!tbody) return;
+    if (!agenda || !agenda.length) {
+      tbody.innerHTML = '<tr><td colspan="3" style="color:var(--text3);text-align:center;padding:24px">Geen events</td></tr>';
+      return;
+    }
+    tbody.innerHTML = agenda.slice(0, 5).map(item => `
+      <tr>
+        <td style="font-family:var(--font-display);font-size:18px;color:var(--text2)">${item.time}</td>
+        <td>${item.event}</td>
+        <td><span class="badge ${TYPE_BADGE[item.type] || 'badge-gray'}">${item.type}</span></td>
+      </tr>`).join('');
+  }
+
+  function renderStats(tracks, pitstops, agenda) {
+    const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    if (tracks  !== null) setEl('stat-tracks',   tracks.length);
+    if (pitstops !== null) setEl('stat-pitstops', pitstops.length);
+    if (agenda  !== null) setEl('stat-events',   agenda.length);
+  }
+
   async function loadHome() {
+    // Load cached data first, then fetch fresh from network
+    try {
+      const [cachedTracks, cachedPitstops, cachedAgenda] = await Promise.all([
+        OfflineSync.getAll('tracks'),
+        OfflineSync.getAll('pitstops'),
+        OfflineSync.getAll('agenda'),
+      ]);
+      if (cachedTracks.length || cachedPitstops.length || cachedAgenda.length) {
+        renderStats(cachedTracks, cachedPitstops, cachedAgenda);
+        renderAgendaPreview(cachedAgenda);
+      }
+    } catch (e) { /* cache not yet ready */ }
+
+    // Fetch fresh data and update display
     try {
       const [tracks, pitstops, agenda] = await Promise.all([
         Tracks.getAll(), Pitstops.getAll(), Agenda.getAll()
       ]);
-      const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-      setEl('stat-tracks',   tracks.length);
-      setEl('stat-pitstops', pitstops.length);
-      setEl('stat-events',   agenda.length);
-
-      const tbody = document.getElementById('agenda-preview');
-      if (!tbody) return;
-      if (!agenda.length) {
-        tbody.innerHTML = '<tr><td colspan="3" style="color:var(--text3);text-align:center;padding:24px">Geen events</td></tr>';
-        return;
-      }
-      tbody.innerHTML = agenda.slice(0, 5).map(item => `
-        <tr>
-          <td style="font-family:var(--font-display);font-size:18px;color:var(--text2)">${item.time}</td>
-          <td>${item.event}</td>
-          <td><span class="badge ${TYPE_BADGE[item.type] || 'badge-gray'}">${item.type}</span></td>
-        </tr>`).join('');
+      renderStats(tracks, pitstops, agenda);
+      renderAgendaPreview(agenda);
     } catch(e) {
-      console.error('[KartPit] loadHome fout:', e);
+      console.error('Failed to load home data:', e);
       if (OfflineSync.isNetworkError(e)) {
-        Toast.show('Geen verbinding – data uit cache geladen', 'error', 4000);
+        Toast.show('No connection - showing cached data', 'error', 4000);
       }
     }
   }
