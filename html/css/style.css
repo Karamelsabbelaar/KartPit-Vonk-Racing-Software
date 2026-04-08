@@ -217,6 +217,9 @@ input:focus, textarea:focus, select:focus { border-color: var(--red); }
 .nav-logo span { color: var(--text); }
 .nav-logo .flag { max-width: 50%;}
 .nav-logo img  { height: 36px; width: auto; max-width: none; }
+.nav-logo .logo-dark { display: none; }
+[data-theme="dark"] .nav-logo .logo-light { display: none; }
+[data-theme="dark"] .nav-logo .logo-dark  { display: block; }
 
 .nav-links {
   display: flex;
